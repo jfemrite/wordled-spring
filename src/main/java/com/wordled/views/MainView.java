@@ -1,6 +1,7 @@
-package com.example.application.views;
+package com.wordled.views;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -8,6 +9,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.wordled.security.SecurityService;
+import com.wordled.security.SecurityUtils;
+import com.wordled.views.components.CustomMenuBar;
+import org.apache.catalina.security.SecurityUtil;
 
 import java.util.ArrayList;
 
@@ -21,12 +27,11 @@ public class MainView extends VerticalLayout {
     private ArrayList<HorizontalLayout> resultLayouts;
 
     // Text fields for input for player
-    private Span title;
     private ArrayList<TextField> lines;
 
     private Button guess;
 
-    public MainView() {
+    public MainView(SecurityService securityService) {
 
         // Generate invisible characters used to show results
         generateResultLayouts();
@@ -35,22 +40,22 @@ public class MainView extends VerticalLayout {
         generateWordleInputs();
 
         // FIELDS
-        title = new Span("!Wordled");
-
-
-
         guess = new Button("Guess");
 
         // STYLE
         setMargin(true);
-        title.getStyle().set("font-size", "30px")
-                .set("font-weight", "1000");
 
         StyleHandler.enableField(lines, 0);
 
+        Span playerWelcome = new Span();
+        if(SecurityUtils.isUserLoggedIn()) {
+            playerWelcome.setText("Welcome back, " + securityService.getAuthenticatedUser().getUsername());
+        }
+
         // ALIGNMENTS
         VerticalLayout vLayout = new VerticalLayout();
-        vLayout.add(title);
+        vLayout.add(new CustomMenuBar(securityService, SecurityUtils.isUserLoggedIn()).getMenuBar());
+        vLayout.add(new H1("!Wordled"));
         vLayout.add(resultLayouts.get(0));
         vLayout.add(lines.get(0));
         vLayout.add(resultLayouts.get(1));
@@ -64,7 +69,6 @@ public class MainView extends VerticalLayout {
         vLayout.add(resultLayouts.get(5));
         vLayout.add(lines.get(5));
         vLayout.add(guess);
-        vLayout.setSpacing(false);
         vLayout.setAlignItems(Alignment.CENTER);
 
         setHorizontalComponentAlignment(Alignment.CENTER, vLayout);

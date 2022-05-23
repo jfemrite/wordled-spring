@@ -1,4 +1,4 @@
-package com.example.application.views;
+package com.wordled.views;
 
 import com.vaadin.flow.component.textfield.Autocapitalize;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,6 +18,7 @@ public class StyleHandler {
         for(int i = 0; i < lines.size(); i++) {
             if(i == enabledLine) {
                 lines.get(i).setAutocapitalize(Autocapitalize.CHARACTERS);
+                lines.get(i).setAutoselect(true);
                 lines.get(i).setAutofocus(true);
                 lines.get(i).setRequired(true);
                 lines.get(i).setEnabled(true);
