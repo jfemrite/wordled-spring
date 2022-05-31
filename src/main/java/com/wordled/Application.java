@@ -24,8 +24,16 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @NpmPackage(value = "line-awesome", version = "1.3.0")
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator {
 
+    private static PlayerData database;
+
     public static void main(String[] args) {
+        database = new PlayerData();
         SpringApplication.run(Application.class, args);
+
+    }
+
+    public static PlayerData getDatabase() {
+        return database;
     }
 
 }

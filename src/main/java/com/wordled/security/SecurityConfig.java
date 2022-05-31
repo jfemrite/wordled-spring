@@ -1,7 +1,10 @@
 package com.wordled.security;
 
+import com.wordled.Application;
+import com.wordled.PlayerData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
+
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        // authentication manager (see below)
+    }
 
     /**
      * Require login to access internal pages and configure login form.
@@ -52,21 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * User details to login
-     * @return UserDetails
-     */
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user")
-                .password("{noop}123")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    /**
      * Allows access to static resources, bypassing Spring Security.
      */
     @Override
@@ -77,6 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // the standard favicon URI
                 "/favicon.ico",
+
+                "/register",
 
                 // the robots exclusion standard
                 "/robots.txt",
